@@ -1,0 +1,17 @@
+{
+  "name": "coop-plateau-web",
+  "version": "1.0.0",
+  "description": "Outil de candidature en coopérative d'habitation - Plateau Mont-Royal",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static site, no build needed'",
+    "db:setup": "node lib/db-setup.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.0",
+    "@vercel/postgres": "^0.10.0",
+    "googleapis": "^144.0.0",
+    "jose": "^6.0.0",
+    "@mendable/firecrawl-js": "^1.0.0"
+  }
+}

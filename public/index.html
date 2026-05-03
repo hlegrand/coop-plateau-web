@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidatures Coop - Plateau Mont-Royal</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>Candidatures Coopératives</h1>
+      <p class="subtitle">Plateau Mont-Royal</p>
+      <div id="auth-area" style="margin-left:auto">
+        <a href="/api/auth/login" class="btn-primary" id="btn-login" style="text-decoration:none;font-size:0.85rem;padding:0.4rem 1rem">Se connecter avec Google</a>
+        <span id="user-name" style="display:none;font-size:0.85rem;color:var(--text-muted)"></span>
+      </div>
+    </div>
+    <nav>
+      <button class="nav-btn active" data-section="steps">Étapes</button>
+      <button class="nav-btn" data-section="coops">Coopératives</button>
+      <button class="nav-btn" data-section="news">Actualités</button>
+      <button class="nav-btn" data-section="profile">Mon profil</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- SECTION: ÉTAPES -->
+    <section id="section-steps" class="section active">
+      <div class="steps-container">
+        <h2>Démarches pour postuler</h2>
+
+        <div class="step-card" data-step="understand">
+          <div class="step-header">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>Comprendre le fonctionnement coopératif</h3>
+              <p>Avant d'aller plus loin, il faut bien comprendre le fonctionnement d'une coopérative d'habitation et les implications de la vie en coop.</p>
+              <div class="step-links-inline">
+                <a href="https://fhcq.coop/fr/habitation-cooperative" target="_blank" class="link-btn">Habitation coopérative &rarr;</a>
+                <a href="https://fhcq.coop/fr/programmes-subventions" target="_blank" class="link-btn">Programmes et subventions &rarr;</a>
+              </div>
+            </div>
+            <label class="step-check"><input type="checkbox" data-check="understand"> Fait</label>
+          </div>
+        </div>
+
+        <div class="step-card" data-step="info-session">
+          <div class="step-header">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>Assister à une rencontre d'information FHCQ</h3>
+              <p>Rencontre Zoom de 1h30 incluant une période de questions (15 $/personne). Tu y apprendras le fonctionnement coopératif et pourras évaluer si la formule répond à tes besoins.</p>
+              <p style="margin-top:0.5rem"><strong>À l'issue de la rencontre :</strong> tu remplis un formulaire indiquant tes quartiers préférés, les comités auxquels tu pourrais te joindre, et d'autres renseignements. La liste des participants est mise à disposition des coopératives membres de la FHCQ comme banque de candidats potentiels.</p>
+              <p class="step-note">Note : rien n'oblige les coopératives à utiliser cette liste.</p>
+              <div class="step-dates">
+                <strong>Prochaines dates (Zoom, en français) :</strong>
+                <ul>
+                  <li>Samedi 16 mai 2026 &mdash; 14h00</li>
+                  <li>Mardi 19 mai 2026 &mdash; 14h00</li>
+                  <li>Mercredi 27 mai 2026 &mdash; 18h30</li>
+                  <li>Samedi 13 juin 2026 &mdash; 14h00</li>
+                  <li>Jeudi 25 juin 2026 &mdash; 18h30</li>
+                </ul>
+              </div>
+              <a href="https://fhcq.coop/fr/candidature-cooperative" target="_blank" class="link-btn">Réserver sur Zeffy (15 $) &rarr;</a>
+            </div>
+            <label class="step-check"><input type="checkbox" data-check="info-session"> Fait</label>
+          </div>
+        </div>
+
+        <div class="step-card" data-step="identify-coops">
+          <div class="step-header">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>Identifier les coopératives visées</h3>
+              <p>Utilise la page <em>Recherche de coop</em> de la FHCQ pour filtrer par quartier, taille de logement et disponibilité. Si tu recherches un logement subventionné, vérifie ton admissibilité au programme en vigueur (ces logements sont rares).</p>
+              <p style="margin-top:0.5rem">La liste complète des ~480 coopératives membres est aussi disponible en PDF (téléchargement ou 2 $ en personne / 6 $ par courrier).</p>
+              <div class="step-links-inline">
+                <a href="https://fhcq.coop/fr/cooperatives" target="_blank" class="link-btn">Recherche de coop (FHCQ) &rarr;</a>
+                <button class="link-btn" onclick="showSection('coops')">Voir ma liste du Plateau &rarr;</button>
+              </div>
+            </div>
+            <label class="step-check"><input type="checkbox" data-check="identify-coops"> Fait</label>
+          </div>
+        </div>
+
+        <div class="step-card" data-step="prepare-docs">
+          <div class="step-header">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h3>Préparer ta candidature</h3>
+              <p>Remplis ton profil ci-dessous. Ces informations serviront à générer des lettres personnalisées. Chaque candidature doit préciser :</p>
+              <ul>
+                <li>Nombre de personnes du ménage et grandeur du logement désiré</li>
+                <li>Revenu approximatif du ménage</li>
+                <li>Raisons qui te motivent à habiter en coop et devenir membre</li>
+                <li>Expériences pertinentes de travail et de bénévolat</li>
+                <li>Coordonnées (téléphone et adresse postale)</li>
+              </ul>
+              <button class="link-btn" onclick="showSection('profile')">Remplir mon profil &rarr;</button>
+            </div>
+            <label class="step-check"><input type="checkbox" data-check="prepare-docs"> Fait</label>
+          </div>
+        </div>
+
+        <div class="step-card" data-step="send-apps">
+          <div class="step-header">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h3>Soumettre tes candidatures</h3>
+              <p>Écris aux coopératives ciblées. Certaines disposent d'une adresse courriel pour recevoir les candidatures ; sinon, procéder par voie postale. Postule au plus grand nombre possible pour maximiser tes chances.</p>
+              <button class="link-btn" onclick="showSection('coops')">Envoyer mes candidatures &rarr;</button>
+            </div>
+            <label class="step-check"><input type="checkbox" data-check="send-apps"> Fait</label>
+          </div>
+        </div>
+
+        <div class="step-card" data-step="follow-up">
+          <div class="step-header">
+            <div class="step-number">6</div>
+            <div class="step-content">
+              <h3>Attendre et suivre les réponses</h3>
+              <p>Chaque coopérative est indépendante et dispose de son propre comité de sélection, de ses critères particuliers et de sa liste d'attente. La FHCQ ne peut pas renseigner sur les délais d'attente.</p>
+              <p style="margin-top:0.5rem">Si la coop a un logement disponible, le comité de sélection étudiera ta demande et pourra te convoquer à une <strong>entrevue de sélection</strong> pour démontrer ton intérêt réel et tes aptitudes pour le mode coopératif.</p>
+            </div>
+            <label class="step-check"><input type="checkbox" data-check="follow-up"> Fait</label>
+          </div>
+        </div>
+
+        <div class="resources-box">
+          <h3>Ressources utiles</h3>
+          <div class="resource-links">
+            <a href="https://fhcq.coop/fr/habitation-cooperative" target="_blank">Habitation coopérative (FHCQ)</a>
+            <a href="https://fhcq.coop/fr/programmes-subventions" target="_blank">Programmes et subventions</a>
+            <a href="https://fhcq.coop/fr/cooperatives" target="_blank">Recherche de coopératives</a>
+            <a href="https://cooperativehabitation.coop/habiter-en-coop/recherche-de-logement-en-cooperative-dhabitation/" target="_blank">CQCH - Guide de recherche</a>
+            <a href="https://cdn.fhcq.coop/uploads/PDF/liste_des_cooperatives-FHCQ-2024.pdf" target="_blank">PDF liste des coops (FHCQ 2024)</a>
+            <a href="https://clpmr.com/en/resources/social-housing/" target="_blank">Comité Logement Plateau Mont-Royal</a>
+            <a href="https://www.promenable.ca/place_of.php?city=1&district=2&type=25" target="_blank">Promenable.ca - 43 coops du Plateau</a>
+          </div>
+          <div class="resource-contacts">
+            <p><strong>FHCQ :</strong> info@fhcq.coop &bull; 7000, avenue du Parc, bureau 206, Montréal H3N 1X1</p>
+            <p><strong>Comité Logement Plateau :</strong> (514) 527-3495</p>
+            <p><strong>FECHIMM :</strong> (514) 843-6929</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: COOPÉRATIVES -->
+    <section id="section-coops" class="section">
+      <div class="coops-toolbar">
+        <div class="view-toggle">
+          <button class="toggle-btn active" data-view="list">Liste</button>
+          <button class="toggle-btn" data-view="map">Carte</button>
+          <button class="toggle-btn" data-view="split">Les deux</button>
+        </div>
+        <div class="filters">
+          <select id="filter-status">
+            <option value="all">Tous les statuts</option>
+            <option value="non-soumise">Non soumise</option>
+            <option value="lettre-generee">Lettre générée</option>
+            <option value="google-docs">Google Docs</option>
+            <option value="envoyee">Envoyée</option>
+            <option value="relancee">Relancée</option>
+            <option value="reponse">Réponse reçue</option>
+            <option value="en-construction">En construction</option>
+          </select>
+          <select id="filter-size">
+            <option value="all">Toutes tailles</option>
+            <option value="4½">Avec 4½</option>
+            <option value="5½">Avec 5½</option>
+            <option value="6½">Avec 6½</option>
+            <option value="4½+">4½ et plus</option>
+          </select>
+          <select id="filter-contact">
+            <option value="all">Tous contacts</option>
+            <option value="email">Email valide</option>
+            <option value="postal">Courrier postal</option>
+          </select>
+        </div>
+        <div class="stats" id="stats-bar"></div>
+      </div>
+
+      <div class="coops-layout" id="coops-layout">
+        <div class="coops-list" id="coops-list"></div>
+        <div class="coops-map" id="coops-map-container">
+          <div id="map"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: ACTUALITÉS -->
+    <section id="section-news" class="section">
+      <div class="news-container">
+        <div class="news-header">
+          <h2>Actualités</h2>
+          <div class="news-actions">
+            <span id="news-last-update" class="news-timestamp"></span>
+            <button class="btn-secondary" id="btn-refresh-news" onclick="refreshNews()">Actualiser</button>
+          </div>
+        </div>
+        <p class="news-desc">Coopératives d'habitation à Montréal, réglementations, nouveaux projets. Mise à jour automatique tous les jours à 18h.</p>
+        <div id="news-list" class="news-list">
+          <p style="color:var(--text-muted)">Clique sur "Actualiser" pour charger les dernières actualités.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: PROFIL -->
+    <section id="section-profile" class="section">
+      <div class="profile-container">
+        <h2>Mon profil</h2>
+        <p class="profile-desc">Ces informations sont sauvegardées localement et utilisées pour générer tes lettres de motivation.</p>
+
+        <form id="profile-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prof-name">Nom complet</label>
+              <input type="text" id="prof-name" value="Henri LEGRAND">
+            </div>
+            <div class="form-group">
+              <label for="prof-phone">Téléphone</label>
+              <input type="tel" id="prof-phone" value="438-630-9304">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prof-email">Email</label>
+              <input type="email" id="prof-email" value="legrand.henri46@gmail.com">
+            </div>
+            <div class="form-group">
+              <label for="prof-address">Adresse actuelle</label>
+              <input type="text" id="prof-address" value="4483 rue Garnier, H2J 3S3, Montréal">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prof-household">Composition du ménage</label>
+              <input type="text" id="prof-household" value="Famille monoparentale — 1 adulte + 2 enfants (3 ans et 4½ ans)">
+            </div>
+            <div class="form-group">
+              <label for="prof-unit">Type de logement recherché</label>
+              <input type="text" id="prof-unit" value="5½">
+            </div>
+          </div>
+          <div class="form-group full-width">
+            <label for="prof-motivations">Motivations pour la vie coopérative</label>
+            <textarea id="prof-motivations" rows="6">Père monoparental suite à une séparation, je cherche un logement stable pour mes 2 enfants et moi. Installé sur le Plateau depuis plus de 5 ans (au Canada depuis 7 ans), c'est notre quartier de cœur — les enfants fréquentent le CPE Le Sablier, tous leurs amis sont ici, et c'est aussi mon seul réseau social car je n'ai pas de famille au Canada. La vie coopérative répond à mon besoin d'entraide et de communauté en tant que parent seul. Je crois profondément aux valeurs de démocratie, d'autogestion et d'économie sociale.</textarea>
+          </div>
+          <div class="form-group full-width">
+            <label for="prof-experiences">Expériences et compétences pertinentes</label>
+            <textarea id="prof-experiences" rows="6">Spécialiste en recherche utilisateur (UX Researcher) chez Ubisoft depuis plus de 5 ans — sensibilité à l'écoute, l'empathie et la recherche de solutions. Compétences numériques : création de tableaux de bord, gestion de site web (Drupal), communication digitale, newsletters. Très bon bricoleur et débrouillard : insonorisation de plafonds, construction de terrasse et abri à vélo, entretien mécanique. Expérience dans le milieu associatif et humanitaire : chef de projet web-marketing chez World Vision et agence de communication pour des associations humanitaires (Armée du Salut, ELA, Fondation Vinci).</textarea>
+          </div>
+
+          <div class="config-info" style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem">
+            <p style="color:var(--text-muted);font-size:0.85rem"><strong>Email :</strong> Les emails sont envoyés depuis <strong>legrand.henri46@gmail.com</strong> via le serveur. Pour activer l'envoi, lance le serveur avec :</p>
+            <code style="display:block;margin-top:0.5rem;color:var(--accent);font-size:0.85rem">$env:GMAIL_APP_PASSWORD="ton_mot_de_passe_app"; node server.js</code>
+            <p style="color:var(--text-muted);font-size:0.82rem;margin-top:0.5rem">Génère un mot de passe d'application sur <a href="https://myaccount.google.com/apppasswords" target="_blank" style="color:var(--accent)">myaccount.google.com/apppasswords</a></p>
+          </div>
+
+          <button type="submit" class="btn-primary">Sauvegarder le profil</button>
+          <span id="profile-saved" class="saved-msg"></span>
+        </form>
+
+        <div class="template-section">
+          <h2>Lettre de motivation template</h2>
+          <p class="profile-desc">Cette lettre sert de modèle pour générer les candidatures personnalisées par coopérative. Tu peux la modifier manuellement ou demander une modification par prompt IA.</p>
+
+          <div class="template-prompt-bar">
+            <input type="text" id="template-prompt" placeholder="Ex: Ajoute une phrase sur mon intérêt pour le jardinage urbain..." />
+            <button class="btn-secondary" onclick="regenerateTemplate()">Modifier par IA</button>
+          </div>
+
+          <textarea id="template-editor" rows="25"></textarea>
+
+          <div class="template-actions">
+            <button class="btn-primary" onclick="saveTemplate()">Sauvegarder le template</button>
+            <button class="btn-secondary" onclick="loadTemplate()">Annuler les modifications</button>
+            <span id="template-saved" class="saved-msg"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: LETTRE DE MOTIVATION -->
+  <div class="modal-overlay" id="letter-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">Lettre de motivation</h2>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="modal-loading" class="loading">
+          <div class="spinner"></div>
+          <p>Génération de la lettre en cours...</p>
+        </div>
+        <div id="modal-error" class="error-msg" style="display:none"></div>
+        <textarea id="letter-editor" rows="20" style="display:none"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="btn-regenerate" onclick="regenerateLetter()">Régénérer</button>
+        <button class="btn-secondary" id="btn-copy" onclick="copyLetter()">Copier</button>
+        <button class="btn-secondary" id="btn-pdf" onclick="downloadPDF()">PDF</button>
+        <button class="btn-secondary" id="btn-gdocs" onclick="openInGoogleDocs()">Google Docs</button>
+        <button class="btn-primary" id="btn-send" onclick="sendLetter()">Envoyer par email</button>
+        <button class="btn-primary" id="btn-mailto" onclick="sendMailto()">Ouvrir dans email</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DÉTAILS COOP -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="detail-modal-title"></h2>
+        <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="detail-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: STATUT -->
+  <div class="modal-overlay" id="status-modal">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2 id="status-modal-title">Mettre à jour le statut</h2>
+        <button class="modal-close" onclick="closeStatusModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="status-options">
+          <button class="status-btn" data-status="non-soumise">Non soumise</button>
+          <button class="status-btn" data-status="lettre-generee">Lettre générée</button>
+          <button class="status-btn" data-status="google-docs">Google Docs</button>
+          <button class="status-btn" data-status="envoyee">Envoyée</button>
+          <button class="status-btn" data-status="relancee">Relancée</button>
+          <button class="status-btn" data-status="reponse">Réponse reçue</button>
+        </div>
+        <div class="form-group" style="margin-top:1rem">
+          <label for="status-note">Note (optionnel)</label>
+          <input type="text" id="status-note" placeholder="Ex: Envoyé le 15 mai, relance prévue en juin">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="saveStatus()">Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
