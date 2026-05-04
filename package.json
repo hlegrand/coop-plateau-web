@@ -12,8 +12,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "0.24.0",
-    "@vercel/postgres": "0.10.0",
-    "jose": "6.0.8"
+    "@vercel/postgres": "0.10.0"
   },
   "devDependencies": {
     "dotenv": "^17.4.2"
