@@ -67,9 +67,11 @@ async function checkAuth() {
     const res = await fetch('/api/auth?action=session');
     if (res.ok) {
       currentUser = await res.json();
-      document.getElementById('btn-login').style.display = 'none';
-      document.getElementById('user-name').style.display = 'inline';
+      document.getElementById('auth-logged-out').style.display = 'none';
+      document.getElementById('auth-logged-in').style.display = 'flex';
       document.getElementById('user-name').textContent = currentUser.name || currentUser.email;
+      const initials = (currentUser.name || currentUser.email || '?').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+      document.getElementById('user-avatar').textContent = initials;
       document.getElementById('profile-auth-wall').style.display = 'none';
       document.getElementById('profile-content').style.display = 'block';
     }
@@ -795,6 +797,65 @@ async function refreshNews() {
     btn.disabled = false;
   }
 }
+
+// ---- Email Auth ----
+
+function toggleAuthForm(e) {
+  e.preventDefault();
+  const signup = document.getElementById('email-signup-form');
+  const login = document.getElementById('email-login-form');
+  const switchText = document.querySelector('.auth-switch');
+  if (signup.style.display === 'none') {
+    signup.style.display = 'flex';
+    login.style.display = 'none';
+    switchText.innerHTML = 'Déjà un compte ? <a href="#" onclick="toggleAuthForm(event)">Se connecter</a>';
+  } else {
+    signup.style.display = 'none';
+    login.style.display = 'flex';
+    switchText.innerHTML = 'Pas de compte ? <a href="#" onclick="toggleAuthForm(event)">Créer un compte</a>';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const signupForm = document.getElementById('email-signup-form');
+  if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('signup-name').value;
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      try {
+        const res = await fetch('/api/auth?action=register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json();
+        if (data.error) { alert(data.error); return; }
+        window.location.reload();
+      } catch (err) { alert('Erreur: ' + err.message); }
+    });
+  }
+
+  const loginForm = document.getElementById('email-login-form');
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      try {
+        const res = await fetch('/api/auth?action=email-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (data.error) { alert(data.error); return; }
+        window.location.reload();
+      } catch (err) { alert('Erreur: ' + err.message); }
+    });
+  }
+});
 
 // ---- Step Checks ----
 
