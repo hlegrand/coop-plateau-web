@@ -1,47 +1,64 @@
-const { generateAuthUrl, getTokens, getUserInfo } = require('../lib/google-oauth');
-const { createUser, getUserById } = require('../lib/db');
-const { createToken, requireAuth } = require('../lib/auth');
-
-const SCOPES = ['openid', 'email', 'profile', 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/documents'];
-
 module.exports = async (req, res) => {
   try {
     const action = req.query.action;
-    const redirectUri = `${req.headers['x-forwarded-proto'] || 'https'}://${req.headers.host}/api/auth?action=callback`;
+    const redirectUri = `https://${req.headers.host}/api/auth?action=callback`;
 
     if (action === 'login') {
-      if (!process.env.GOOGLE_CLIENT_ID) {
-        return res.status(500).json({ error: 'GOOGLE_CLIENT_ID non configuré' });
-      }
-      const url = generateAuthUrl(process.env.GOOGLE_CLIENT_ID, redirectUri, SCOPES);
-      return res.redirect(url);
+      const clientId = process.env.GOOGLE_CLIENT_ID;
+      if (!clientId) return res.status(500).json({ error: 'GOOGLE_CLIENT_ID manquant' });
+
+      const params = new URLSearchParams({
+        client_id: clientId,
+        redirect_uri: redirectUri,
+        response_type: 'code',
+        scope: 'openid email profile https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/documents',
+        access_type: 'offline',
+        prompt: 'consent'
+      });
+      return res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`);
     }
 
     if (action === 'callback') {
       const { code } = req.query;
       if (!code) return res.status(400).json({ error: 'Code manquant' });
 
-      const tokens = await getTokens(code, process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, redirectUri);
+      const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          code,
+          client_id: process.env.GOOGLE_CLIENT_ID,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET,
+          redirect_uri: redirectUri,
+          grant_type: 'authorization_code'
+        })
+      });
+      const tokens = await tokenRes.json();
       if (tokens.error) return res.status(400).json({ error: tokens.error_description || tokens.error });
 
-      const userInfo = await getUserInfo(tokens.access_token);
-      const user = await createUser(userInfo.id, userInfo.email, userInfo.name);
-      const jwt = await createToken(user);
+      const userRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+        headers: { Authorization: `Bearer ${tokens.access_token}` }
+      });
+      const userInfo = await userRes.json();
 
-      res.setHeader('Set-Cookie', `auth_token=${jwt}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${30 * 24 * 60 * 60}`);
+      res.setHeader('Set-Cookie', `auth_user=${encodeURIComponent(JSON.stringify({ id: userInfo.id, email: userInfo.email, name: userInfo.name }))}; Path=/; SameSite=Lax; Max-Age=${30 * 24 * 60 * 60}`);
       return res.redirect('/');
     }
 
     if (action === 'session') {
-      const payload = await requireAuth(req, res);
-      if (!payload) return;
-      const user = await getUserById(payload.id);
-      if (!user) return res.status(404).json({ error: 'Utilisateur introuvable' });
-      return res.json({ id: user.id, email: user.email, name: user.name, profile: user.profile, hasDriveTokens: !!user.google_drive_tokens });
+      const cookie = req.headers.cookie || '';
+      const match = cookie.match(/auth_user=([^;]+)/);
+      if (!match) return res.status(401).json({ error: 'Non connecté' });
+      try {
+        const user = JSON.parse(decodeURIComponent(match[1]));
+        return res.json(user);
+      } catch {
+        return res.status(401).json({ error: 'Session invalide' });
+      }
     }
 
     if (action === 'logout') {
-      res.setHeader('Set-Cookie', 'auth_token=; Path=/; HttpOnly; Max-Age=0');
+      res.setHeader('Set-Cookie', 'auth_user=; Path=/; Max-Age=0');
       return res.redirect('/');
     }
 
