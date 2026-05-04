@@ -247,8 +247,8 @@ function renderCoops() {
   const list = document.getElementById('coops-list');
 
   list.innerHTML = filtered.map(c => {
-    const status = c.future ? 'en-construction' : getAppStatus(c.id);
-    const note = getAppNote(c.id);
+    const status = c.future ? 'en-construction' : currentUser ? getAppStatus(c.id) : null;
+    const note = currentUser ? getAppNote(c.id) : '';
     const hasEmail = c.email || false;
     const canEmailApply = hasEmail && !c.postalOnly;
     const hasWebsite = c.website || false;
@@ -257,7 +257,7 @@ function renderCoops() {
       <div class="coop-card" data-id="${c.id}" onclick="highlightCoop('${c.id}')">
         <div class="coop-card-top">
           <span class="coop-name">${c.name}</span>
-          <span class="coop-badge badge-${status}">${STATUS_LABELS[status]}</span>
+          ${status ? `<span class="coop-badge badge-${status}">${STATUS_LABELS[status]}</span>` : ''}
         </div>
         <div class="coop-address">${c.address}</div>
         <div class="coop-meta">
@@ -291,6 +291,10 @@ function renderCoops() {
 }
 
 function updateStats() {
+  if (!currentUser) {
+    document.getElementById('stats-bar').innerHTML = `<span style="color:var(--text-muted);font-size:0.82rem">${cooperatives.length} coopératives</span>`;
+    return;
+  }
   const counts = { 'non-soumise': 0, 'envoyee': 0, 'lettre-generee': 0, 'relancee': 0, 'reponse': 0 };
   cooperatives.forEach(c => {
     const s = getAppStatus(c.id);
@@ -322,7 +326,7 @@ function updateMapMarkers() {
   const filtered = getFilteredCoops();
   filtered.forEach(c => {
     if (!c.lat || !c.lng) return;
-    const status = c.future ? 'en-construction' : getAppStatus(c.id);
+    const status = c.future ? 'en-construction' : currentUser ? getAppStatus(c.id) : 'non-soumise';
     const color = STATUS_COLORS[status] || STATUS_COLORS['non-soumise'];
 
     const icon = L.divIcon({
