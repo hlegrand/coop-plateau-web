@@ -1,5 +1,5 @@
 {
-  "installCommand": "npm install --prefer-offline --no-audit --no-fund",
+  "installCommand": "echo skipping npm install",
   "buildCommand": "echo done",
   "outputDirectory": "public",
   "rewrites": [

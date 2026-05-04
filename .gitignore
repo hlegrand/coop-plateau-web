@@ -1,7 +1,5 @@
-node_modules/
 .env
 .vercel/
 .firecrawl/
-
 .vercel
 .env*.local
