@@ -1,5 +1,6 @@
 {
-  "buildCommand": "",
+  "installCommand": "npm install --prefer-offline --no-audit --no-fund",
+  "buildCommand": "echo done",
   "outputDirectory": "public",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" }
