@@ -70,6 +70,8 @@ async function checkAuth() {
       document.getElementById('btn-login').style.display = 'none';
       document.getElementById('user-name').style.display = 'inline';
       document.getElementById('user-name').textContent = currentUser.name || currentUser.email;
+      document.getElementById('profile-auth-wall').style.display = 'none';
+      document.getElementById('profile-content').style.display = 'block';
     }
   } catch {}
 }

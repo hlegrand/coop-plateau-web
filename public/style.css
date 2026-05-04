@@ -582,6 +582,20 @@ main { padding: 1.5rem 2rem 3rem; max-width: 1400px; margin: 0 auto; }
 .status-btn:hover { border-color: var(--accent); }
 .status-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
+/* AUTH WALL */
+.auth-wall {
+  max-width: 500px;
+  text-align: center;
+  padding: 3rem 2rem;
+  margin: 2rem auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.auth-wall h2 { margin-bottom: 0.75rem; }
+.auth-wall p { color: var(--text-muted); font-size: 0.9rem; }
+
 /* TEMPLATE */
 .template-section {
   margin-top: 2.5rem;

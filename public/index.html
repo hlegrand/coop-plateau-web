@@ -211,9 +211,14 @@
 
     <!-- SECTION: PROFIL -->
     <section id="section-profile" class="section">
-      <div class="profile-container">
+      <div id="profile-auth-wall" class="auth-wall">
         <h2>Mon profil</h2>
-        <p class="profile-desc">Ces informations sont sauvegardées localement et utilisées pour générer tes lettres de motivation.</p>
+        <p>Connecte-toi pour accéder à ton profil, tes candidatures et ton template de lettre.</p>
+        <a href="/api/auth?action=login" class="btn-primary" style="text-decoration:none;display:inline-block;margin-top:1rem">Se connecter avec Google</a>
+      </div>
+      <div class="profile-container" id="profile-content" style="display:none">
+        <h2>Mon profil</h2>
+        <p class="profile-desc">Ces informations sont sauvegardées et utilisées pour générer tes lettres de motivation.</p>
 
         <form id="profile-form">
           <div class="form-row">
