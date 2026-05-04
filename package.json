@@ -13,7 +13,6 @@
   "dependencies": {
     "@google/generative-ai": "0.24.0",
     "@vercel/postgres": "0.10.0",
-    "google-auth-library": "9.15.1",
     "jose": "6.0.8"
   },
   "devDependencies": {

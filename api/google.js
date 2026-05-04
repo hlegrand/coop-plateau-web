@@ -1,4 +1,3 @@
-const { OAuth2Client } = require('google-auth-library');
 const { requireAuth } = require('../lib/auth');
 const { getDriveTokens } = require('../lib/db');
 
