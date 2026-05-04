@@ -90,8 +90,6 @@ async function loadProfileFromServer() {
     if (p.address) document.getElementById('prof-address').value = p.address;
     if (p.household) document.getElementById('prof-household').value = p.household;
     if (p.unitType) document.getElementById('prof-unit').value = p.unitType;
-    if (p.motivations) document.getElementById('prof-motivations').value = p.motivations;
-    if (p.experiences) document.getElementById('prof-experiences').value = p.experiences;
   } catch {}
 }
 
@@ -669,13 +667,19 @@ function getProfile() {
     address: document.getElementById('prof-address').value,
     household: document.getElementById('prof-household').value,
     unitType: document.getElementById('prof-unit').value,
-    motivations: document.getElementById('prof-motivations').value,
-    experiences: document.getElementById('prof-experiences').value,
   };
 }
 
 function saveProfile() {
-  localStorage.setItem('coop-profile', JSON.stringify(getProfile()));
+  const profile = getProfile();
+  localStorage.setItem('coop-profile', JSON.stringify(profile));
+  if (currentUser) {
+    fetch('/api/user?action=profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ profile })
+    }).catch(() => {});
+  }
 }
 
 function loadProfile() {
@@ -688,8 +692,6 @@ function loadProfile() {
   if (p.address) document.getElementById('prof-address').value = p.address;
   if (p.household) document.getElementById('prof-household').value = p.household;
   if (p.unitType) document.getElementById('prof-unit').value = p.unitType;
-  if (p.motivations) document.getElementById('prof-motivations').value = p.motivations;
-  if (p.experiences) document.getElementById('prof-experiences').value = p.experiences;
 }
 
 // ---- Template ----
