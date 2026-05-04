@@ -1,4 +1,3 @@
-const { google } = require('googleapis');
 const { requireAuth } = require('../../lib/auth');
 const { getDriveTokens } = require('../../lib/db');
 
@@ -11,26 +10,20 @@ module.exports = async (req, res) => {
     return res.json({ files: [] });
   }
 
-  const oauth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET
-  );
-  oauth2Client.setCredentials(driveData.google_drive_tokens);
+  const token = driveData.google_drive_tokens.access_token;
 
   try {
-    const drive = google.drive({ version: 'v3', auth: oauth2Client });
     const query = driveData.drive_folder_id
       ? `'${driveData.drive_folder_id}' in parents and mimeType='application/vnd.google-apps.document' and trashed=false`
       : `name contains 'Candidature' and mimeType='application/vnd.google-apps.document' and trashed=false`;
 
-    const result = await drive.files.list({
-      q: query,
-      fields: 'files(id, name, webViewLink, createdTime)',
-      orderBy: 'createdTime desc',
-      pageSize: 100
+    const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=files(id,name,webViewLink,createdTime)&orderBy=createdTime desc&pageSize=100`;
+    const listRes = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` }
     });
+    const data = await listRes.json();
 
-    res.json({ files: result.data.files || [] });
+    res.json({ files: data.files || [] });
   } catch (err) {
     res.json({ files: [] });
   }

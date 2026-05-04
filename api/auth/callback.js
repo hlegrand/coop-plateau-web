@@ -1,4 +1,4 @@
-const { google } = require('googleapis');
+const { OAuth2Client } = require('google-auth-library');
 const { createUser } = require('../../lib/db');
 const { createToken } = require('../../lib/auth');
 
@@ -7,18 +7,15 @@ module.exports = async (req, res) => {
   if (!code) return res.status(400).json({ error: 'Code manquant' });
 
   const redirectUri = `${req.headers['x-forwarded-proto'] || 'http'}://${req.headers.host}/api/auth/callback`;
-  const oauth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    redirectUri
-  );
+  const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, redirectUri);
 
   try {
-    const { tokens } = await oauth2Client.getToken(code);
-    oauth2Client.setCredentials(tokens);
+    const { tokens } = await client.getToken(code);
 
-    const oauth2 = google.oauth2({ version: 'v2', auth: oauth2Client });
-    const { data: userInfo } = await oauth2.userinfo.get();
+    const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+      headers: { Authorization: `Bearer ${tokens.access_token}` }
+    });
+    const userInfo = await userInfoRes.json();
 
     const user = await createUser(userInfo.id, userInfo.email, userInfo.name);
     const jwt = await createToken(user);

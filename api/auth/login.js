@@ -1,13 +1,10 @@
-const { google } = require('googleapis');
+const { OAuth2Client } = require('google-auth-library');
 
 module.exports = (req, res) => {
-  const oauth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    `${req.headers['x-forwarded-proto'] || 'http'}://${req.headers.host}/api/auth/callback`
-  );
+  const redirectUri = `${req.headers['x-forwarded-proto'] || 'http'}://${req.headers.host}/api/auth/callback`;
+  const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, redirectUri);
 
-  const url = oauth2Client.generateAuthUrl({
+  const url = client.generateAuthUrl({
     access_type: 'offline',
     prompt: 'consent',
     scope: [

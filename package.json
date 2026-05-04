@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Outil de candidature en coopérative d'habitation - Plateau Mont-Royal",
   "engines": {
-    "node": ">=18"
+    "node": "20.x"
   },
   "scripts": {
     "dev": "vercel dev",
@@ -13,8 +13,7 @@
   "dependencies": {
     "@google/generative-ai": "0.24.0",
     "@vercel/postgres": "0.10.0",
-    "googleapis": "144.0.0",
-    "jose": "6.0.8",
-    "@mendable/firecrawl-js": "1.15.5"
+    "google-auth-library": "9.15.1",
+    "jose": "6.0.8"
   }
 }
