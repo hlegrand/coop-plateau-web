@@ -18,9 +18,42 @@ module.exports = async (req, res) => {
     template = fs.readFileSync(path.join(process.cwd(), 'data', 'letter-template-default.txt'), 'utf8');
   }
 
-  const prompt = `Tu dois adapter une lettre de candidature pour la coopérative d'habitation "${cooperative.name}".
+  const isDefaultTemplate = template.includes('[Présentez-vous') || template.includes('[Votre nom]');
 
-LETTRE DE RÉFÉRENCE (approuvée par le candidat — c'est le ton, le style et la structure à reproduire) :
+  let prompt;
+  if (isDefaultTemplate) {
+    prompt = `Tu dois rédiger une lettre de candidature pour la coopérative d'habitation "${cooperative.name}".
+
+PROFIL DU CANDIDAT :
+- Nom : ${profile.name || 'Non renseigné'}
+- Téléphone : ${profile.phone || 'Non renseigné'}
+- Email : ${profile.email || 'Non renseigné'}
+- Adresse : ${profile.address || 'Non renseigné'}
+- Ménage : ${profile.household || 'Non renseigné'}
+- Logement recherché : ${profile.unitType || 'Non renseigné'}
+- Motivations : ${profile.motivations || 'Non renseigné'}
+- Expériences : ${profile.experiences || 'Non renseigné'}
+
+COOPÉRATIVE VISÉE :
+- Nom : ${cooperative.name}
+- Adresse : ${cooperative.address}
+- Nombre de logements : ${cooperative.units || 'Non spécifié'}
+- Clientèle : ${cooperative.clientele || 'Générale'}
+- Notes : ${cooperative.notes || 'Aucune'}
+
+CONSIGNES :
+1. Rédige une lettre formelle mais chaleureuse pour postuler à cette coopérative
+2. Structure : date (${today}), coordonnées expéditeur, destinataire (Comité de sélection, Coopérative ${cooperative.name}), objet, corps en paragraphes fluides, formule de politesse, signature
+3. Intègre naturellement les infos du profil : situation familiale, ancrage dans le quartier, motivations pour la vie coopérative, compétences concrètes pour les comités, expériences associatives
+4. Personnalise selon les spécificités de la coop si des notes sont fournies
+5. INTERDICTIONS : aucun symbole markdown, aucun tiret long, aucun crochet, texte brut uniquement. NE PAS inventer de détails non fournis dans le profil
+6. Longueur : 400-500 mots
+
+Produis UNIQUEMENT la lettre, sans commentaire.`;
+  } else {
+    prompt = `Tu dois adapter une lettre de candidature pour la coopérative d'habitation "${cooperative.name}".
+
+LETTRE DE RÉFÉRENCE (approuvée par le candidat, reproduire le même ton et style) :
 
 """
 ${template}
@@ -30,21 +63,19 @@ COOPÉRATIVE VISÉE :
 - Nom : ${cooperative.name}
 - Adresse : ${cooperative.address}
 - Nombre de logements : ${cooperative.units || 'Non spécifié'}
-- Programme : ${cooperative.programme || 'Non spécifié'}
 - Clientèle : ${cooperative.clientele || 'Générale'}
-- Notes spécifiques : ${cooperative.notes || 'Aucune'}
+- Notes : ${cooperative.notes || 'Aucune'}
 
 CONSIGNES D'ADAPTATION :
-1. Reprends la lettre de référence quasi telle quelle — même ton, même structure, mêmes paragraphes, même style d'écriture
-2. Adaptations à faire :
-   - Remplacer le nom de la coopérative par "${cooperative.name}" dans le dernier paragraphe
-   - Si la coop a des notes spécifiques, ajouter une phrase ou deux qui y font référence naturellement
-   - Si la coop a une clientèle particulière, adapter légèrement le ton
-3. Ajouter en en-tête : la date du ${today}, puis les coordonnées de l'expéditeur, puis "Comité de sélection, Coopérative ${cooperative.name}${cooperative.address && !cooperative.address.includes('Quartier') && !cooperative.address.includes('C.P.') ? ', ' + cooperative.address : ''}", puis "Objet : Candidature pour un logement"
-4. INTERDICTIONS : aucun symbole markdown (pas de **, *, ---, #, puces), aucun tiret long, aucun crochet. Texte brut uniquement. NE PAS inventer de détails géographiques
-5. NE PAS réécrire la lettre depuis zéro. Garder le même texte avec des adaptations mineures
+1. Reprends la lettre quasi telle quelle, même ton, même structure
+2. Remplacer le nom de la coopérative par "${cooperative.name}" dans le dernier paragraphe
+3. Si la coop a des notes spécifiques, ajouter une phrase ou deux naturellement
+4. Ajouter en en-tête : date du ${today}, coordonnées expéditeur, "Comité de sélection, Coopérative ${cooperative.name}${cooperative.address && !cooperative.address.includes('Quartier') && !cooperative.address.includes('C.P.') ? ', ' + cooperative.address : ''}", "Objet : Candidature pour un logement"
+5. INTERDICTIONS : aucun symbole markdown, aucun tiret long, aucun crochet. Texte brut uniquement. NE PAS inventer de détails géographiques
+6. NE PAS réécrire depuis zéro
 
 Produis UNIQUEMENT la lettre adaptée, sans commentaire.`;
+  }
 
   try {
     const letter = await generateText(prompt, 1500);
