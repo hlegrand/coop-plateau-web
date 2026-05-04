@@ -386,6 +386,12 @@ main { padding: 1.5rem 2rem 3rem; max-width: 1400px; margin: 0 auto; }
 
 .btn-sm.btn-apply:hover { background: var(--accent-hover); }
 
+.btn-sm:disabled, .btn-sm.btn-apply:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 /* MAP */
 .coops-map { border-radius: var(--radius); overflow: hidden; min-height: 400px; }
 #map { width: 100%; height: 100%; min-height: 400px; }

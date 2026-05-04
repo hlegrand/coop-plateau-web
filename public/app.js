@@ -274,13 +274,13 @@ function renderCoops() {
         ${c.notes ? `<div class="coop-notes">${c.notes}</div>` : ''}
         ${note ? `<div class="coop-status-note">${note}</div>` : ''}
         <div class="coop-actions">
-          ${status === 'en-construction' ? '' : status === 'non-soumise' ? `<button class="btn-sm btn-apply" onclick="event.stopPropagation(); generateLetter('${c.id}')">${canEmailApply ? 'Faire une demande' : 'Générer la lettre'}</button>` : ''}
-          ${status === 'lettre-generee' ? `<button class="btn-sm btn-apply" onclick="event.stopPropagation(); openSavedLetter('${c.id}')">Voir la lettre</button>` : ''}
+          ${status === 'en-construction' ? '' : status === 'non-soumise' ? `<button class="btn-sm btn-apply" ${!currentUser ? 'disabled title="Connecte-toi pour postuler"' : ''} onclick="event.stopPropagation(); generateLetter('${c.id}')">${canEmailApply ? 'Faire une demande' : 'Générer la lettre'}</button>` : ''}
+          ${status === 'lettre-generee' ? `<button class="btn-sm btn-apply" ${!currentUser ? 'disabled' : ''} onclick="event.stopPropagation(); openSavedLetter('${c.id}')">Voir la lettre</button>` : ''}
           <button class="btn-sm" onclick="event.stopPropagation(); openCoopDetail('${c.id}')">Détails</button>
           ${c.applicationForm ? `<button class="btn-sm" onclick="event.stopPropagation(); window.open('${c.applicationForm}', '_blank')">Formulaire</button>` : ''}
-          ${hasEmail ? `<button class="btn-sm" onclick="event.stopPropagation(); window.open('mailto:${c.email}')">Email</button>` : ''}
+          ${hasEmail ? `<button class="btn-sm" ${!currentUser ? 'disabled' : ''} onclick="event.stopPropagation(); window.open('mailto:${c.email}')">Email</button>` : ''}
           ${hasWebsite ? `<button class="btn-sm" onclick="event.stopPropagation(); window.open('${c.website}', '_blank')">Site web</button>` : ''}
-          <button class="btn-sm" onclick="event.stopPropagation(); openStatusModal('${c.id}')">Statut</button>
+          <button class="btn-sm" ${!currentUser ? 'disabled' : ''} onclick="event.stopPropagation(); openStatusModal('${c.id}')">Statut</button>
         </div>
       </div>
     `;
@@ -337,7 +337,7 @@ function updateMapMarkers() {
       <div class="popup-name">${c.name}</div>
       <div class="popup-address">${c.address}</div>
       <div class="popup-status"><span class="coop-badge badge-${status}" style="font-size:0.75rem">${STATUS_LABELS[status]}</span></div>
-      ${status === 'non-soumise' ? `<button class="popup-btn" onclick="generateLetter('${c.id}')">Faire une demande</button>` : ''}
+      ${status === 'non-soumise' && currentUser ? `<button class="popup-btn" onclick="generateLetter('${c.id}')">Faire une demande</button>` : ''}
     `);
 
     marker.on('click', () => highlightCard(c.id));
