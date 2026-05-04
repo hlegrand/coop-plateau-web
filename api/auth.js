@@ -1,19 +1,32 @@
-const { OAuth2Client } = require('google-auth-library');
+let OAuth2Client;
+try {
+  OAuth2Client = require('google-auth-library').OAuth2Client;
+} catch (e) {
+  console.error('Failed to load google-auth-library:', e.message);
+}
+
 const { createUser, getUserById } = require('../lib/db');
 const { createToken, requireAuth } = require('../lib/auth');
 
 module.exports = async (req, res) => {
-  const action = req.query.action;
-  const redirectUri = `${req.headers['x-forwarded-proto'] || 'http'}://${req.headers.host}/api/auth?action=callback`;
+  try {
+    const action = req.query.action;
+    const redirectUri = `${req.headers['x-forwarded-proto'] || 'https'}://${req.headers.host}/api/auth?action=callback`;
 
-  if (action === 'login') {
-    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, redirectUri);
-    const url = client.generateAuthUrl({
-      access_type: 'offline', prompt: 'consent',
-      scope: ['openid', 'email', 'profile', 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/documents']
-    });
-    return res.redirect(url);
-  }
+    if (action === 'login') {
+      if (!process.env.GOOGLE_CLIENT_ID) {
+        return res.status(500).json({ error: 'GOOGLE_CLIENT_ID non configuré' });
+      }
+      if (!OAuth2Client) {
+        return res.status(500).json({ error: 'google-auth-library non chargé' });
+      }
+      const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, redirectUri);
+      const url = client.generateAuthUrl({
+        access_type: 'offline', prompt: 'consent',
+        scope: ['openid', 'email', 'profile', 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/documents']
+      });
+      return res.redirect(url);
+    }
 
   if (action === 'callback') {
     const { code } = req.query;
@@ -49,4 +62,8 @@ module.exports = async (req, res) => {
   }
 
   res.status(400).json({ error: 'Action inconnue. Utilise ?action=login|callback|session|logout' });
+  } catch (err) {
+    console.error('Auth error:', err);
+    res.status(500).json({ error: err.message, stack: err.stack?.split('\n').slice(0, 3) });
+  }
 };
