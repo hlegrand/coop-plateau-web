@@ -1,3 +1,5 @@
+const { sql } = require('@vercel/postgres');
+
 module.exports = async (req, res) => {
   try {
     const action = req.query.action;
@@ -41,7 +43,18 @@ module.exports = async (req, res) => {
       });
       const userInfo = await userRes.json();
 
-      res.setHeader('Set-Cookie', `auth_user=${encodeURIComponent(JSON.stringify({ id: userInfo.id, email: userInfo.email, name: userInfo.name }))}; Path=/; SameSite=Lax; Max-Age=${30 * 24 * 60 * 60}`);
+      const { rows } = await sql`
+        INSERT INTO users (google_id, email, name)
+        VALUES (${userInfo.id}, ${userInfo.email}, ${userInfo.name})
+        ON CONFLICT (google_id) DO UPDATE SET email = ${userInfo.email}, name = ${userInfo.name}
+        RETURNING id, email, name`;
+      const dbUser = rows[0];
+
+      if (tokens.refresh_token) {
+        await sql`UPDATE users SET google_drive_tokens = ${JSON.stringify(tokens)} WHERE id = ${dbUser.id}`;
+      }
+
+      res.setHeader('Set-Cookie', `auth_user=${encodeURIComponent(JSON.stringify({ id: dbUser.id, email: dbUser.email, name: dbUser.name }))}; Path=/; SameSite=Lax; Max-Age=${30 * 24 * 60 * 60}`);
       return res.redirect('/');
     }
 
