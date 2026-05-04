@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function checkAuth() {
   try {
-    const res = await fetch('/api/auth/session');
+    const res = await fetch('/api/auth?action=session');
     if (res.ok) {
       currentUser = await res.json();
       document.getElementById('btn-login').style.display = 'none';
@@ -76,7 +76,7 @@ async function checkAuth() {
 
 async function loadProfileFromServer() {
   try {
-    const res = await fetch('/api/user/profile');
+    const res = await fetch('/api/user?action=profile');
     if (!res.ok) return;
     const data = await res.json();
     const p = data.profile;
@@ -93,7 +93,7 @@ async function loadProfileFromServer() {
 
 async function loadApplicationsFromServer() {
   try {
-    const res = await fetch('/api/user/applications');
+    const res = await fetch('/api/user?action=applications');
     if (!res.ok) return;
     const data = await res.json();
     applicationData = {};
@@ -111,7 +111,7 @@ async function loadApplicationsFromServer() {
 
 async function syncGoogleDocsStatus() {
   try {
-    const res = await fetch('/api/google/list-docs');
+    const res = await fetch('/api/google?action=list-docs');
     if (!res.ok) return;
     const data = await res.json();
 
@@ -154,7 +154,7 @@ function loadApplicationData() {
 function saveApplicationData(coopId) {
   localStorage.setItem('coop-applications', JSON.stringify(applicationData));
   if (currentUser && coopId && applicationData[coopId]) {
-    fetch('/api/user/applications', {
+    fetch('/api/user?action=applications', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ coopId, ...applicationData[coopId] })
@@ -443,7 +443,7 @@ function downloadPDF() {
 }
 
 async function openInGoogleDocs() {
-  const statusRes = await fetch('/api/google/status');
+  const statusRes = await fetch('/api/google?action=status');
   const status = await statusRes.json();
 
   if (!status.hasCredentials) {
@@ -465,7 +465,7 @@ async function openInGoogleDocs() {
   btn.disabled = true;
 
   try {
-    const res = await fetch('/api/google/create-doc', {
+    const res = await fetch('/api/google?action=create-doc', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -688,7 +688,7 @@ function loadProfile() {
 
 async function loadTemplate() {
   try {
-    const res = await fetch('/api/template/get');
+    const res = await fetch('/api/template?action=get');
     const data = await res.json();
     document.getElementById('template-editor').value = data.template;
   } catch (err) {
@@ -699,7 +699,7 @@ async function loadTemplate() {
 async function saveTemplate() {
   const template = document.getElementById('template-editor').value;
   try {
-    await fetch('/api/template/save', {
+    await fetch('/api/template?action=save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ template })
@@ -723,7 +723,7 @@ async function regenerateTemplate() {
   btn.disabled = true;
 
   try {
-    const res = await fetch('/api/template/regenerate', {
+    const res = await fetch('/api/template?action=regenerate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: userPrompt, currentTemplate })
@@ -744,7 +744,7 @@ async function regenerateTemplate() {
 
 async function loadNews() {
   try {
-    const res = await fetch('/api/news/get');
+    const res = await fetch('/api/news');
     const data = await res.json();
     renderNews(data);
   } catch (err) {
@@ -782,7 +782,7 @@ async function refreshNews() {
   btn.disabled = true;
 
   try {
-    const res = await fetch('/api/news/refresh', { method: 'POST' });
+    const res = await fetch('/api/news', { method: 'POST' });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     renderNews(data);
