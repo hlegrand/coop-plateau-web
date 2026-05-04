@@ -248,46 +248,40 @@
           <div class="form-row">
             <div class="form-group">
               <label for="prof-name">Nom complet</label>
-              <input type="text" id="prof-name" value="Henri LEGRAND">
+              <input type="text" id="prof-name" placeholder="Votre nom">
             </div>
             <div class="form-group">
               <label for="prof-phone">Téléphone</label>
-              <input type="tel" id="prof-phone" value="438-630-9304">
+              <input type="tel" id="prof-phone" placeholder="514-000-0000">
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
               <label for="prof-email">Email</label>
-              <input type="email" id="prof-email" value="legrand.henri46@gmail.com">
+              <input type="email" id="prof-email" placeholder="votre@email.com">
             </div>
             <div class="form-group">
               <label for="prof-address">Adresse actuelle</label>
-              <input type="text" id="prof-address" value="4483 rue Garnier, H2J 3S3, Montréal">
+              <input type="text" id="prof-address" placeholder="Adresse, code postal, ville">
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
               <label for="prof-household">Composition du ménage</label>
-              <input type="text" id="prof-household" value="Famille monoparentale — 1 adulte + 2 enfants (3 ans et 4½ ans)">
+              <input type="text" id="prof-household" placeholder="Ex: Couple avec 2 enfants (5 et 8 ans)">
             </div>
             <div class="form-group">
               <label for="prof-unit">Type de logement recherché</label>
-              <input type="text" id="prof-unit" value="5½">
+              <input type="text" id="prof-unit" placeholder="Ex: 4½ ou 5½">
             </div>
           </div>
           <div class="form-group full-width">
             <label for="prof-motivations">Motivations pour la vie coopérative</label>
-            <textarea id="prof-motivations" rows="6">Père monoparental suite à une séparation, je cherche un logement stable pour mes 2 enfants et moi. Installé sur le Plateau depuis plus de 5 ans (au Canada depuis 7 ans), c'est notre quartier de cœur — les enfants fréquentent le CPE Le Sablier, tous leurs amis sont ici, et c'est aussi mon seul réseau social car je n'ai pas de famille au Canada. La vie coopérative répond à mon besoin d'entraide et de communauté en tant que parent seul. Je crois profondément aux valeurs de démocratie, d'autogestion et d'économie sociale.</textarea>
+            <textarea id="prof-motivations" rows="6" placeholder="Pourquoi souhaitez-vous vivre en coopérative ? Qu'est-ce qui vous attire dans ce mode de vie ?"></textarea>
           </div>
           <div class="form-group full-width">
             <label for="prof-experiences">Expériences et compétences pertinentes</label>
-            <textarea id="prof-experiences" rows="6">Spécialiste en recherche utilisateur (UX Researcher) chez Ubisoft depuis plus de 5 ans — sensibilité à l'écoute, l'empathie et la recherche de solutions. Compétences numériques : création de tableaux de bord, gestion de site web (Drupal), communication digitale, newsletters. Très bon bricoleur et débrouillard : insonorisation de plafonds, construction de terrasse et abri à vélo, entretien mécanique. Expérience dans le milieu associatif et humanitaire : chef de projet web-marketing chez World Vision et agence de communication pour des associations humanitaires (Armée du Salut, ELA, Fondation Vinci).</textarea>
-          </div>
-
-          <div class="config-info" style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem">
-            <p style="color:var(--text-muted);font-size:0.85rem"><strong>Email :</strong> Les emails sont envoyés depuis <strong>legrand.henri46@gmail.com</strong> via le serveur. Pour activer l'envoi, lance le serveur avec :</p>
-            <code style="display:block;margin-top:0.5rem;color:var(--accent);font-size:0.85rem">$env:GMAIL_APP_PASSWORD="ton_mot_de_passe_app"; node server.js</code>
-            <p style="color:var(--text-muted);font-size:0.82rem;margin-top:0.5rem">Génère un mot de passe d'application sur <a href="https://myaccount.google.com/apppasswords" target="_blank" style="color:var(--accent)">myaccount.google.com/apppasswords</a></p>
+            <textarea id="prof-experiences" rows="6" placeholder="Vos compétences utiles pour une coop (bricolage, informatique, jardinage...), expériences de bénévolat, implication communautaire..."></textarea>
           </div>
 
           <button type="submit" class="btn-primary">Sauvegarder le profil</button>
