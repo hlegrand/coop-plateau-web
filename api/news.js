@@ -29,7 +29,9 @@ async function refreshNews() {
           source: new URL(item.url).hostname.replace('www.', '')
         });
       }
-    } catch {}
+    } catch (err) {
+      console.error('Firecrawl search error:', err.message);
+    }
   }
 
   if (allArticles.length > 0) await upsertNews(allArticles);
