@@ -74,6 +74,10 @@ async function checkAuth() {
       document.getElementById('user-avatar').textContent = initials;
       document.getElementById('profile-auth-wall').style.display = 'none';
       document.getElementById('profile-content').style.display = 'block';
+      if (currentUser.email === 'legrand.henri46@gmail.com') {
+        document.getElementById('nav-admin').style.display = 'inline-block';
+        loadAdmin();
+      }
     }
   } catch {}
 }
@@ -802,6 +806,34 @@ async function refreshNews() {
     btn.textContent = 'Actualiser';
     btn.disabled = false;
   }
+}
+
+// ---- Admin ----
+
+async function loadAdmin() {
+  try {
+    const res = await fetch('/api/admin?action=dashboard');
+    if (!res.ok) return;
+    const data = await res.json();
+
+    document.getElementById('admin-stats').innerHTML = `
+      <div class="admin-stat-card"><div class="stat-value">${data.stats.totalUsers}</div><div class="stat-label">Utilisateurs</div></div>
+      <div class="admin-stat-card"><div class="stat-value">${data.stats.totalApplications}</div><div class="stat-label">Candidatures</div></div>
+      <div class="admin-stat-card"><div class="stat-value">${data.stats.sentCount}</div><div class="stat-label">Envoyées</div></div>
+      <div class="admin-stat-card"><div class="stat-value">${data.stats.docsCount}</div><div class="stat-label">Google Docs</div></div>
+    `;
+
+    document.getElementById('admin-users-body').innerHTML = data.users.map(u => `
+      <tr>
+        <td>${u.id}</td>
+        <td>${u.name || '-'}</td>
+        <td>${u.email}</td>
+        <td><span class="admin-type-badge admin-type-${u.type}">${u.type === 'google' ? 'Google' : 'Email'}</span></td>
+        <td>${u.appCount}</td>
+        <td>${new Date(u.createdAt).toLocaleDateString('fr-CA')}</td>
+      </tr>
+    `).join('');
+  } catch {}
 }
 
 // ---- Email Auth ----

@@ -693,6 +693,70 @@ main { padding: 1.5rem 2rem 3rem; max-width: 1400px; margin: 0 auto; }
 .auth-switch a { color: var(--accent); text-decoration: none; }
 .auth-switch a:hover { text-decoration: underline; }
 
+/* ADMIN */
+.admin-container { max-width: 900px; }
+.admin-container h2 { margin-bottom: 1rem; }
+
+.admin-stats {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.5rem;
+  min-width: 140px;
+}
+
+.admin-stat-card .stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.admin-stat-card .stat-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 2px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.admin-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-table tr:hover td { background: var(--bg); }
+
+.admin-type-badge {
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.admin-type-google { background: #e8eeff; color: #2563eb; }
+.admin-type-email { background: #f0ebff; color: #7c3aed; }
+
 /* TEMPLATE */
 .template-section {
   margin-top: 2.5rem;
