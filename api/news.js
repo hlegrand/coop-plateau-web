@@ -22,7 +22,7 @@ async function searchFirecrawl(query, limit) {
 }
 
 async function searchGoogle(query, limit) {
-  const key = process.env.GOOGLE_SEARCH_API_KEY;
+  const key = process.env.GOOGLE_SEARCH_API_KEY || process.env.GEMINI_API_KEY;
   const cx = process.env.GOOGLE_SEARCH_CX;
   if (!key || !cx) throw new Error('Google Search not configured');
   const params = new URLSearchParams({ key, cx, q: query, num: String(limit), lr: 'lang_fr' });

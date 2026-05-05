@@ -1,0 +1,73 @@
+<GoogleCustomizations>
+  <CustomSearchEngine>
+    <Title>Coopératives Habitation Montréal</Title>
+    <Context>
+      <BackgroundLabels>
+        <Label name="coop_housing" mode="FILTER"/>
+      </BackgroundLabels>
+    </Context>
+    <LookAndFeel/>
+  </CustomSearchEngine>
+  <Annotations>
+    <Annotation about="fhcq.coop/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="cooperativehabitation.coop/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="fechimm.coop/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="monplateau.info/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="clpmr.com/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="montreal.ca/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="ici.radio-canada.ca/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="lapresse.ca/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="ledevoir.com/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="journalmetro.com/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="tvanouvelles.ca/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="miltonparc.org/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="atelierhabitationmontreal.org/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="batirsonquartier.com/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="habitation.gouv.qc.ca/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="omhm.qc.ca/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="guidehabitation.ca/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="promenable.ca/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="estmediamontreal.com/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+    <Annotation about="arrondissement.com/*" score="1">
+      <Label name="coop_housing"/>
+    </Annotation>
+  </Annotations>
+</GoogleCustomizations>
