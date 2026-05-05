@@ -28,7 +28,6 @@
     <nav>
       <button class="nav-btn active" data-section="steps">Étapes</button>
       <button class="nav-btn" data-section="coops">Coopératives</button>
-      <button class="nav-btn" data-section="news">Actualités</button>
       <button class="nav-btn" data-section="profile">Mon profil</button>
       <button class="nav-btn" data-section="admin" id="nav-admin" style="display:none">Admin</button>
     </nav>
@@ -197,23 +196,6 @@
         <div class="coops-list" id="coops-list"></div>
         <div class="coops-map" id="coops-map-container">
           <div id="map"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION: ACTUALITÉS -->
-    <section id="section-news" class="section">
-      <div class="news-container">
-        <div class="news-header">
-          <h2>Actualités</h2>
-          <div class="news-actions">
-            <span id="news-last-update" class="news-timestamp"></span>
-            <button class="btn-secondary" id="btn-refresh-news" onclick="refreshNews()">Actualiser</button>
-          </div>
-        </div>
-        <p class="news-desc">Coopératives d'habitation à Montréal, réglementations, nouveaux projets. Mise à jour automatique tous les jours à 18h.</p>
-        <div id="news-list" class="news-list">
-          <p style="color:var(--text-muted)">Clique sur "Actualiser" pour charger les dernières actualités.</p>
         </div>
       </div>
     </section>

@@ -3,3 +3,5 @@
 .firecrawl/
 .vercel
 .env*.local
+
+.env*.local
