@@ -61,7 +61,7 @@ module.exports = async (req, res) => {
     if (action === 'register' && req.method === 'POST') {
       const { name, email, password } = req.body;
       if (!name || !email || !password) return res.status(400).json({ error: 'Nom, email et mot de passe requis' });
-      if (password.length < 6) return res.status(400).json({ error: 'Mot de passe trop court (6 caractères minimum)' });
+      if (password.length < 8) return res.status(400).json({ error: 'Mot de passe trop court (8 caractères minimum)' });
 
       const { rows: existing } = await sql`SELECT id FROM users WHERE email = ${email}`;
       if (existing.length > 0) return res.status(400).json({ error: 'Un compte existe déjà avec cet email' });
@@ -70,8 +70,8 @@ module.exports = async (req, res) => {
       const hash = crypto.createHash('sha256').update(password + (process.env.AUTH_SECRET || '')).digest('hex');
 
       const { rows } = await sql`
-        INSERT INTO users (google_id, email, name, profile)
-        VALUES (${'email:' + email}, ${email}, ${name}, ${JSON.stringify({ password_hash: hash })})
+        INSERT INTO users (google_id, email, name, password_hash)
+        VALUES (${'email:' + email}, ${email}, ${name}, ${hash})
         RETURNING id, email, name`;
       const user = rows[0];
 
@@ -87,10 +87,12 @@ module.exports = async (req, res) => {
       if (rows.length === 0) return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
 
       const user = rows[0];
+      if (!user.password_hash) return res.status(401).json({ error: 'Ce compte utilise Google Sign-In. Connecte-toi avec Google.' });
+
       const crypto = require('crypto');
       const hash = crypto.createHash('sha256').update(password + (process.env.AUTH_SECRET || '')).digest('hex');
 
-      if (user.profile?.password_hash !== hash) return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
+      if (user.password_hash !== hash) return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
 
       res.setHeader('Set-Cookie', `auth_user=${encodeURIComponent(JSON.stringify({ id: user.id, email: user.email, name: user.name }))}; Path=/; SameSite=Lax; Max-Age=${30 * 24 * 60 * 60}`);
       return res.json({ success: true });
